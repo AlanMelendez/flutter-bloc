@@ -12,4 +12,6 @@ import 'package:get_it/get_it.dart';
   getIt.registerSingleton<ThemeCubit>(ThemeCubit());
   getIt.registerSingleton(RouterSimpleCubit());
 
+  getIt.registerSingleton<GuestsBloc>(GuestsBloc());
+
  }

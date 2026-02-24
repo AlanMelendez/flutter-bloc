@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../blocs/04-guests/guests_bloc.dart';
 
 
 class GuestsScreen extends StatelessWidget {
@@ -25,6 +28,10 @@ class _TodoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final guestBloc = context.watch<GuestsBloc>();
+    final currentFilter = guestBloc.state.filterSelected;
+
     return Column(
       children: [
         const ListTile(
@@ -34,13 +41,13 @@ class _TodoView extends StatelessWidget {
 
         SegmentedButton(
           segments: const[
-            ButtonSegment(value: 'all', icon: Text('Todos')),
-            ButtonSegment(value: 'completed', icon: Text('Invitados')),
-            ButtonSegment(value: 'pending', icon: Text('No invitados')),
+            ButtonSegment(value: GuestsFilter.all, icon: Text('Todos')),
+            ButtonSegment(value: GuestsFilter.invited, icon: Text('Invitados')),
+            ButtonSegment(value: GuestsFilter.notInvited, icon: Text('No invitados')),
           ], 
-          selected: const <String>{ 'all' },
+          selected:  <GuestsFilter>{ currentFilter },
           onSelectionChanged: (value) {
-            
+            guestBloc.changeFilter(value.first);
           },
         ),
         const SizedBox( height: 5 ),
@@ -48,10 +55,13 @@ class _TodoView extends StatelessWidget {
         /// Listado de personas a invitar
         Expanded(
           child: ListView.builder(
+            itemCount: guestBloc.state.howManyFilteredGuests,
             itemBuilder: (context, index) {
+
+              final guest = guestBloc.state.filteredGuests[index];
               return SwitchListTile(
-                title: const Text('Juan carlos'),
-                value: true, 
+                title: Text(guest.description),
+                value: guest.done, 
                 onChanged: ( value ) {}
               );
             },
