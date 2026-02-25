@@ -33,17 +33,9 @@ class GuestsBloc extends Bloc<GuestsEvent, GuestsState> {
       emit(state.copyWith(filterSelected: event.newFilter));
     });
 
-    on<AddGuestEvent>((event, emit) {
+    on<AddGuestEvent>(_addGuestHandler);
 
-        final newGuest = Todo(
-          id: uuid.v4(),
-          description: event.name,
-          completedAt: null,
-        );
-  
-        emit(state.copyWith(guests: [...state.guests, newGuest]));
-
-    });
+    on<ToggleGuestEvent>(_toggleGuestHandler);
 
     // on<SetInvitedFilterEvent>((event, emit) {
     //   emit(state.copyWith(filterSelected: GuestsFilter.invited));
@@ -56,6 +48,34 @@ class GuestsBloc extends Bloc<GuestsEvent, GuestsState> {
     // on<SetNotInvitedFilterEvent>((event, emit) {
     //   emit(state.copyWith(filterSelected: GuestsFilter.notInvited));
     // });
+  }
+
+  void toggleGuest(String id) {
+    add(ToggleGuestEvent(id));
+  }
+
+   void _toggleGuestHandler(ToggleGuestEvent event, Emitter<GuestsState> emit) {
+    final newGuests = state.guests.map((guest) {
+      if (guest.id == event.id) {
+        return guest.copyWith(
+          completedAt: guest.done ? null : DateTime.now(),
+        );
+      }
+      return guest;
+    }).toList();
+
+    emit(state.copyWith(guests: newGuests));
+   
+  }
+
+  void _addGuestHandler(AddGuestEvent event, Emitter<GuestsState> emit) {
+    final newGuest = Todo(
+      id: uuid.v4(),
+      description: event.name,
+      completedAt: null,
+    );
+
+    emit(state.copyWith(guests: [...state.guests, newGuest]));
   }
   void addGuest(String name) {
     add(AddGuestEvent(name));
