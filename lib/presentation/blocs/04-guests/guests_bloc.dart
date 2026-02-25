@@ -10,21 +10,42 @@ part 'guests_state.dart';
 const uuid = Uuid();
 
 class GuestsBloc extends Bloc<GuestsEvent, GuestsState> {
-  GuestsBloc() : super(GuestsState(
-    guests: [
-      Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now()),
-      Todo(id: uuid.v4(), description:  RandomGenerator.getRandomName(), completedAt: null),
-      Todo(id: uuid.v4(), description:  RandomGenerator.getRandomName(), completedAt: null),
-      Todo(id: uuid.v4(), description:  RandomGenerator.getRandomName(), completedAt: DateTime.now()),
-        
-    ]
-  )) {
- 
+  GuestsBloc()
+      : super(GuestsState(guests: [
+          Todo(
+              id: uuid.v4(),
+              description: RandomGenerator.getRandomName(),
+              completedAt: DateTime.now()),
+          Todo(
+              id: uuid.v4(),
+              description: RandomGenerator.getRandomName(),
+              completedAt: null),
+          Todo(
+              id: uuid.v4(),
+              description: RandomGenerator.getRandomName(),
+              completedAt: null),
+          Todo(
+              id: uuid.v4(),
+              description: RandomGenerator.getRandomName(),
+              completedAt: DateTime.now()),
+        ])) {
     on<SetCustomFilterEvent>((event, emit) {
       emit(state.copyWith(filterSelected: event.newFilter));
     });
 
-       // on<SetInvitedFilterEvent>((event, emit) {
+    on<AddGuestEvent>((event, emit) {
+
+        final newGuest = Todo(
+          id: uuid.v4(),
+          description: event.name,
+          completedAt: null,
+        );
+  
+        emit(state.copyWith(guests: [...state.guests, newGuest]));
+
+    });
+
+    // on<SetInvitedFilterEvent>((event, emit) {
     //   emit(state.copyWith(filterSelected: GuestsFilter.invited));
     // });
 
@@ -35,12 +56,13 @@ class GuestsBloc extends Bloc<GuestsEvent, GuestsState> {
     // on<SetNotInvitedFilterEvent>((event, emit) {
     //   emit(state.copyWith(filterSelected: GuestsFilter.notInvited));
     // });
-
+  }
+  void addGuest(String name) {
+    add(AddGuestEvent(name));
   }
 
   void changeFilter(GuestsFilter newFilter) {
-
-      add(SetCustomFilterEvent(newFilter));
+    add(SetCustomFilterEvent(newFilter));
     // switch (newFilter) {
     //   case GuestsFilter.all:
     //     add(SetAllFilterEvent());
