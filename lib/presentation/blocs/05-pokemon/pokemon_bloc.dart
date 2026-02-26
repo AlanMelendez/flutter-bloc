@@ -6,7 +6,12 @@ part 'pokemon_event.dart';
 part 'pokemon_state.dart';
 
 class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
-  PokemonBloc() : super(PokemonState()) {
+  final Future<String> Function(int) _fetchPokemonName;
+
+  PokemonBloc({
+    required pokemonFetch,
+  })  : _fetchPokemonName = pokemonFetch,
+        super(PokemonState()) {
     on<PokemonAddEvent>((event, emit) {
       final newPokemons = Map<int, String>.from(state.pokemons);
       newPokemons[event.pokemonId] = event.pokemonName;
@@ -16,8 +21,11 @@ class PokemonBloc extends Bloc<PokemonEvent, PokemonState> {
   }
 
   Future<String> fetchPokemonById(int id) async {
+    if (state.pokemons.containsKey(id)) {
+      return state.pokemons[id]!;
+    }
     try {
-      final pokemonName = await PokemonInformation.getPokemonName(id);
+      final pokemonName = await _fetchPokemonName(id);
 
       add(PokemonAddEvent(id, pokemonName));
 
