@@ -18,4 +18,6 @@ import 'package:get_it/get_it.dart';
     pokemonFetch:  PokemonInformation.getPokemonName, //Send the reference of the function without executing it. (exlude the parentheses and parameters)
   ));
 
+  getIt.registerSingleton<GeolocationCubit>(GeolocationCubit());
+
  }
