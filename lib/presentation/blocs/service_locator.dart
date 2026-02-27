@@ -19,8 +19,11 @@ import 'package:get_it/get_it.dart';
   ));
 
   //getIt.registerSingleton<GeolocationCubit>(GeolocationCubit());
-
-  getIt.registerSingleton(GeolocationCubit()..watchUserLocation()); //Cascade operator to execute a method after the instance is created.
-
   getIt.registerSingleton(HistoricLocationBloc());
+  
+  getIt.registerSingleton(GeolocationCubit(
+    onNewUserLocationCallBack: getIt<HistoricLocationBloc>().onNewUserLocation, //Send the reference of the function without executing it. (exlude the parentheses and parameters)
+  )..watchUserLocation()); //Cascade operator to execute a method after the instance is created.
+
+
  }

@@ -12,9 +12,7 @@ class NewLocationEvent extends HistoricLocationEvent {
 
   final (double lat, double lng) location;
 
-  const NewLocationEvent({
-    required this.location
-  });
+  const NewLocationEvent(this.location);
 
   @override
   List<Object> get props => [location];

@@ -7,7 +7,11 @@ part 'historic_location_state.dart';
 class HistoricLocationBloc
     extends Bloc<HistoricLocationEvent, HistoricLocationState> {
   HistoricLocationBloc() : super(const HistoricLocationState()) {
-    on<NewLocationEvent>((event, emit) => _onNewLocationHandlerEvent);
+    on<NewLocationEvent>(_onNewLocationHandlerEvent);
+  }
+
+  void onNewUserLocation((double lat, double lng) location) {
+    add(NewLocationEvent( location));
   }
 
   void _onNewLocationHandlerEvent( NewLocationEvent event, Emitter<HistoricLocationState> emit) {
