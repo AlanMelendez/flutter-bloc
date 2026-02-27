@@ -22,4 +22,5 @@ import 'package:get_it/get_it.dart';
 
   getIt.registerSingleton(GeolocationCubit()..watchUserLocation()); //Cascade operator to execute a method after the instance is created.
 
+  getIt.registerSingleton(HistoricLocationBloc());
  }
